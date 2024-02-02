@@ -51,5 +51,6 @@ router.get('/:taste', async (req,res) =>{
         res.status(500).json({error: 'Invalid Request'});
     }
 });  
-  
+
+
 module.exports = router;
