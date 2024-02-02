@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const MenuItem = require('./../Models/MenuItem');
+const { updateMany } = require('../models/Person');
 
 
 router.post('/', async (req,res) => {
@@ -52,5 +53,47 @@ router.get('/:taste', async (req,res) =>{
     }
 });  
 
+router.put('/:id',  async (req,res) =>{
+  try{
+    const menuitemid = req.params.id;
+    const updatedData = req.body;
 
+    const response = await MenuItem.findByIdAndUpdate(menuitemid,updatedData,{
+      new: true,
+      runValidators: true
+    });
+
+    if (!response){
+      return res.status(404).json({error: 'Person not found'});
+
+    }
+
+    console.log('Data updated');
+    res.status(200).json(response);
+
+  }catch(err){
+    console.log(err);
+    res.status(500).json({error: 'Internal Server Error'});
+  }
+})
+
+router.delete('/:id',async (req,res) =>{
+  try{
+    const id = req.params.id;
+
+    const response = await MenuItem.findByIdAndDelete(id);
+
+    if(!response){
+      return res.status(404).json({error: 'Menu Item not found'});
+    }
+
+    console.log('Data Deleted');
+    res.status(200).json({message: 'Data deleted Successfully'});
+
+  }catch(err){
+    console.log(err);
+    res.status(500).json({error: 'Internal Server Error'});
+
+  }
+})
 module.exports = router;
